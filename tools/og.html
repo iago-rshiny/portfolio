@@ -1,0 +1,72 @@
+<!doctype html>
+<!-- Gera og-image.png (preview do LinkedIn). Veja o README para o comando. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400&display=swap">
+<style>
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; background: #e5e3de; }
+  body { position: relative; font-family: "Newsreader", serif; color: #151515; }
+  /* folha inclinada levemente, com outra por baixo */
+  .sheet {
+    position: absolute; left: 150px; top: 46px; width: 900px; height: 640px;
+    background: #fffefb; border: 1px solid rgba(20,20,20,.09);
+    box-shadow: 0 1px 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08), 0 30px 60px -30px rgba(0,0,0,.35);
+  }
+  .under { transform: rotate(-2.2deg) translate(-14px, 10px); background: #f6f4ee; }
+  .stamp {
+    position: absolute; left: 42px; top: 58px; writing-mode: vertical-rl; transform: rotate(180deg);
+    font-size: 19px; letter-spacing: .05em; color: #66645f;
+  }
+  .stamp b { font-weight: 600; text-transform: uppercase; letter-spacing: .1em; }
+  .inner { position: absolute; left: 110px; right: 90px; top: 50px; text-align: center; }
+  h1 { margin: 0; font-size: 44px; line-height: 1.12; font-weight: 560; letter-spacing: -.012em; text-wrap: balance; }
+  .sub { margin: 10px 0 0; font-size: 28px; line-height: 1.25; color: #3e3d3a; text-wrap: balance; }
+  .sub sup { color: #9c2a1f; font-size: .5em; }
+  .author { margin: 26px 0 0; font-size: 30px; font-variant-caps: small-caps; letter-spacing: .05em; font-weight: 500; }
+  .affil { margin: 6px 0 0; font-size: 21px; color: #3e3d3a; }
+  .abs-h { margin: 22px 0 0; font-size: 19px; font-weight: 650; }
+  .abs { margin: 6px auto 0; width: 620px; font-size: 18.5px; line-height: 1.42; color: #3e3d3a; text-align: justify; hyphens: auto; }
+  .kw { margin: 10px auto 0; width: 620px; text-align: left; font-size: 18px; line-height: 1.4; color: #3e3d3a; }
+  .kw b { font-style: italic; font-weight: 650; color: #151515; }
+  .fade { position: absolute; left: 0; right: 0; bottom: 0; height: 70px; background: linear-gradient(transparent, #fffefb); }
+</style>
+</head>
+<body>
+  <div class="sheet under"></div>
+  <div class="sheet">
+    <p class="stamp" id="stamp"></p>
+    <div class="inner">
+      <h1 id="title"></h1>
+      <p class="sub" id="sub"></p>
+      <p class="author" id="author"></p>
+      <p class="affil" id="affil"></p>
+      <p class="abs-h" id="abs-h"></p>
+      <p class="abs" id="abs"></p>
+      <p class="kw" id="kw"></p>
+    </div>
+    <div class="fade"></div>
+  </div>
+  <script src="../content.js"></script>
+  <script>
+    const C = window.PORTFOLIO;
+    const LANG = 'en'; // idioma do preview: 'en' ou 'pt'
+    const t = v => (v && typeof v === 'object' && !Array.isArray(v) ? v[LANG] : v);
+    // mesmo título do site: "Construo X — de A a B" → "X:" / "de A a B"
+    // mesmo título do site: C.title ("Título: subtítulo") ou, sem ele, o tagline ("Construo X — de A a B")
+    let main, sub;
+    if (t(C.title)) { const s = t(C.title), k = s.indexOf(': '); main = k > 0 ? s.slice(0, k) : s; sub = k > 0 ? s.slice(k + 2) : ''; }
+    else { const [head, ...rest] = t(C.tagline).split(/\s+[—–]\s+/); main = head.replace(/^(i build|construo)\s+/i, ''); sub = rest.join(' — '); }
+    document.getElementById('title').textContent = main.charAt(0).toUpperCase() + main.slice(1) + (sub ? ':' : '');
+    document.getElementById('sub').innerHTML = sub.replace(/\.\s*$/, '') + '<sup>*</sup>';
+    document.getElementById('author').textContent = C.name;
+    const role = (C.datasheet || []).find(r => /role|função/i.test(t(r.k)));
+    document.getElementById('affil').textContent = role ? t(role.v) : C.role;
+    document.getElementById('abs-h').textContent = LANG === 'en' ? 'Abstract' : 'Resumo';
+    document.getElementById('abs').textContent = (b => [b[0], b[b.length - 1]].filter(Boolean).join(' '))(t(C.about.bio))  // 1º e último parágrafos;
+    document.getElementById('kw').innerHTML = `<b>${LANG === 'en' ? 'Keywords' : 'Palavras-chave'} —</b> ` + t(C.focus);
+    const d = new Date();
+    document.getElementById('stamp').innerHTML = `<b>Preprint</b> · v${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')} · [cs.AI]`;
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+/* eggs/eggs.css — estilos dos easter eggs; cada módulo tem seu arquivo, importado aqui */
+@import url('kmeans.css');
+@import url('evallab.css');
+@import url('ontology.css');
+@import url('langgraph.css');
+@import url('confusion.css');

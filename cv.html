@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iago Vale — CV</title>
+  <meta name="robots" content="noindex">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Um link por peso: assim o Google Fonts serve instâncias estáticas, que o Chrome embute no PDF como
+       TrueType (fontes variáveis viram Type 3, pior para leitores de PDF e sistemas de triagem). -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:wght@600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400&display=swap">
+  <style id="cv-page">@page { size: letter; margin: 0; }</style>
+  <style>
+    /* cv.html — CV de 2 páginas no estilo do artigo, gerado do content.js.
+       A tela mostra as folhas sobre a mesa; a impressão (e o PDF) sai exatamente com essas folhas. */
+    :root {
+      --serif: 'Newsreader', 'STIX Two Text', 'Iowan Old Style', 'Times New Roman', Times, serif;
+      --mono: 'Inconsolata', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+      --desk: #e5e3de; --paper: #fffefb; --ink: #151515; --ink-2: #3e3d3a; --ink-3: #66645f;
+      --rule: #151515; --hair: #cfcbc1; --link: #1c4aa6;
+      --shadow: 0 1px 1px rgba(0, 0, 0, .05), 0 2px 6px -2px rgba(0, 0, 0, .08), 0 18px 40px -22px rgba(0, 0, 0, .28);
+      --fs: 10.25pt;
+      --pw: 8.5in; --ph: 11in; --mt: .5in; --mx: .62in; --mb: .46in;
+    }
+    html.a4 { --pw: 210mm; --ph: 297mm; --mt: 12.5mm; --mx: 15mm; --mb: 11.5mm; }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body {
+      margin: 0; background: var(--desk); color: var(--ink);
+      font-family: var(--serif); font-optical-sizing: auto; font-kerning: normal;
+      text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; border-radius: 2px; }
+
+    /* ---------- barra (só na tela) ---------- */
+    .bar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem;
+      max-width: calc(var(--pw) + 2rem); margin: 0 auto; padding: .9rem 1rem .2rem; font-size: .95rem; color: var(--ink-2);
+    }
+    .bar a { text-decoration: none; }
+    .bar a:hover { text-decoration: underline; text-underline-offset: .17em; text-decoration-thickness: 1px; }
+    .bar-r { display: flex; align-items: center; gap: .9rem; }
+    .lang a, .lang span { padding: .1rem .15rem; }
+    .lang [aria-current] { color: var(--ink); font-weight: 600; }
+    .lang .sep { color: var(--ink-3); padding: 0; }
+    .dl {
+      display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .8rem .32rem; border-radius: 999px;
+      background: var(--ink); color: var(--paper); font-size: .9rem; font-weight: 600;
+    }
+    .dl:hover { text-decoration: none !important; opacity: .88; }
+    .dl svg { width: .95rem; height: .95rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ---------- mesa e folhas ---------- */
+    .desk { display: flex; flex-direction: column; align-items: center; gap: 28px; padding: 18px 0 48px; }
+    @media screen { .desk { zoom: var(--z, 1); } }
+    .sheet {
+      position: relative; width: var(--pw); height: var(--ph); flex: none; overflow: hidden;
+      padding: var(--mt) var(--mx) var(--mb); background: var(--paper); box-shadow: var(--shadow);
+      font-size: var(--fs); line-height: 1.33; font-variant-numeric: lining-nums;
+    }
+    .pb { height: calc(var(--ph) - var(--mt) - var(--mb) - 1.6em); overflow: hidden; }
+    .pb > :first-child { margin-top: 0 !important; }
+    .pf {
+      position: absolute; left: 0; right: 0; bottom: calc(var(--mb) - .35em); text-align: center;
+      font-size: .82em; color: var(--ink-3); font-variant-numeric: oldstyle-nums;
+    }
+
+    /* ---------- cabeçalho ---------- */
+    .hd { text-align: center; padding-bottom: .55em; border-bottom: .75pt solid var(--rule); }
+    .hd h1 { margin: 0; font-size: 1.95em; line-height: 1.1; font-weight: 400; text-transform: uppercase; letter-spacing: .07em; }
+    .hd .role { margin: .2em 0 0; font-size: 1.14em; font-style: italic; color: var(--ink-2); }
+    .hd .meta { margin: .45em 0 0; font-size: .93em; color: var(--ink-2); }
+    .hd .meta + .meta { margin-top: .12em; }
+    .k { text-transform: uppercase; font-size: .8em; letter-spacing: .07em; font-weight: 600; color: var(--ink-3); }
+    .gap { display: inline-block; width: 1.6em; }
+    .u { font-family: var(--mono); font-size: .97em; color: var(--link); text-decoration: none; white-space: nowrap; }
+    .dot { color: var(--ink-3); padding: 0 .45em; }
+
+    /* ---------- seções ---------- */
+    h2 {
+      margin: 1.05em 0 .4em; padding-bottom: .12em; border-bottom: .4pt solid var(--hair);
+      font-size: .96em; line-height: 1.2; font-weight: 600; text-transform: uppercase; letter-spacing: .1em;
+    }
+    p { margin: 0; }
+    .sum { text-align: justify; }
+    .job { margin-top: .62em; }
+    .row { display: flex; align-items: baseline; justify-content: space-between; gap: 1em; }
+    .row .t { font-weight: 600; }
+    .row .o { color: var(--ink); }
+    .row .d { flex: none; color: var(--ink-2); font-size: .95em; white-space: nowrap; font-variant-numeric: lining-nums tabular-nums; }
+    .row .st { color: var(--ink-3); font-style: italic; }
+    ul.b { margin: .18em 0 0; padding: 0 0 0 1.05em; list-style: none; }
+    ul.b li { position: relative; margin-top: .1em; }
+    ul.b li::before { content: '–'; position: absolute; left: -.95em; color: var(--ink-3); }
+    .tools { margin-top: .16em; padding-left: 1.05em; font-size: .93em; color: var(--ink-2); }
+    .tools .k { color: var(--ink-3); }
+    .nw { white-space: nowrap; }
+    .prj { margin-top: .55em; }
+    .prj .sm { margin-top: .08em; }
+    .prj .m { font-style: italic; }
+    .prj .tools { padding-left: 0; }
+    .sk { margin-top: .22em; padding-left: 1.05em; text-indent: -1.05em; }
+    .sk .g { font-weight: 600; }
+    .sk .fam { font-style: italic; color: var(--ink-2); }
+    .ed { margin-top: .4em; }
+    .ed .sub { color: var(--ink-2); }
+    .lg { margin-top: .1em; }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #121211; }
+      .bar { color: #c8c4bb; }
+      .lang [aria-current] { color: #ebe8e1; }
+      .dl { background: #ebe8e1; color: #1c1b19; }
+      .sheet { box-shadow: 0 1px 1px rgba(0, 0, 0, .4), 0 18px 40px -20px rgba(0, 0, 0, .7); }
+    }
+    @media print {
+      body { background: none; }
+      .bar { display: none !important; }
+      .desk { display: block; padding: 0; gap: 0; }
+      .sheet { background: #fff; box-shadow: none; break-after: page; page-break-after: always; }
+      .sheet:last-child { break-after: auto; page-break-after: auto; }
+      .u { color: var(--ink); }
+    }
+  </style>
+</head>
+<body>
+  <nav class="bar" id="bar" aria-label="CV"></nav>
+  <main class="desk" id="desk"><noscript><p style="padding:2rem;text-align:center">This CV is typeset with JavaScript; the PDF version is linked from the site.</p></noscript></main>
+
+  <script src="content.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const C = window.PORTFOLIO || {};
+    const q = new URLSearchParams(location.search).get('lang');
+    const lang = q === 'pt' ? 'pt' : 'en', pt = lang === 'pt';
+    const t = v => (v == null ? '' : (typeof v === 'object' && !Array.isArray(v) ? (v[lang] ?? v.en ?? '') : v));
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const smart = s => String(s ?? '').replace(/"([^"]*)"/g, '“$1”').replace(/(\w)'(\w)/g, '$1’$2');
+    const tx = v => esc(smart(t(v)));
+    const span = s => String(s || '').replace(/\s+[—–-]\s+/g, '–');   // "2018 — 2023" → "2018–2023"
+    const L = C.links || {};
+
+    const UI = {
+      en: {
+        title: 'Résumé', back: 'Back to the paper', dl: 'Download PDF', other: 'Português',
+        sum: 'Summary', exp: 'Experience', prj: 'Selected projects', skills: 'Skills', edu: 'Education', act: 'Research & volunteering', lang: 'Languages',
+        tools: 'Tools', stack: 'Stack', familiar: 'familiar', present: 'Present', page: (i, n) => `${i} / ${n}`,
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      },
+      pt: {
+        title: 'Currículo', back: 'Voltar ao artigo', dl: 'Baixar PDF', other: 'English',
+        sum: 'Resumo', exp: 'Experiência', prj: 'Projetos selecionados', skills: 'Competências', edu: 'Formação', act: 'Pesquisa & voluntariado', lang: 'Idiomas',
+        tools: 'Ferramentas', stack: 'Stack', familiar: 'familiaridade', present: 'atual', page: (i, n) => `${i} / ${n}`,
+        months: ['jan.', 'fev.', 'mar.', 'abr.', 'maio', 'jun.', 'jul.', 'ago.', 'set.', 'out.', 'nov.', 'dez.']
+      }
+    }[lang];
+
+    document.documentElement.lang = pt ? 'pt-BR' : 'en';
+    document.documentElement.classList.toggle('a4', pt);
+    document.getElementById('cv-page').textContent = `@page { size: ${pt ? 'A4' : 'letter'}; margin: 0; }`;
+    document.title = `${C.name || ''} — ${t(C.role)} · ${UI.title}`;
+
+    /* ---------- dados ---------- */
+    const ds = k => (C.datasheet || []).find(r => r.k && (r.k.en || r.k) === k);   // procura pela chave em inglês
+    const kv = r => (r ? `<span class="k">${tx(r.k)}</span> ${tx(r.v)}` : '');
+    const ym = s => { const [y, m] = String(s).split('-').map(Number); return `${UI.months[m - 1]} ${y}`; };
+    const pretty = u => String(u || '').replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    const list = a => (a || []).map(x => `<span class="nw">${tx(x)}</span>`).join(', ');
+    const sentences = s => String(s).split(/(?<=[.!?])\s+(?=[A-ZÀ-Ý])/);
+
+    /* blocos na ordem de leitura; keep = manter junto do próximo; g = item de uma lista <ul> */
+    const B = [];
+    const add = (html, keep, g) => B.push({ html, keep: !!keep, g });
+
+    const contacts = [
+      L.email ? `<a class="u" href="mailto:${esc(L.email)}">${esc(L.email)}</a>` : '',
+      L.linkedin ? `<a class="u" href="${esc(L.linkedin)}">${esc(pretty(L.linkedin))}</a>` : '',
+      L.site ? `<a class="u" href="${esc(L.site)}">${esc(pretty(L.site))}</a>` : ''
+    ].filter(Boolean).join('<span class="dot" aria-hidden="true">·</span>');
+    const where = [kv(ds('Based in')), kv(ds('Citizenship'))].filter(Boolean).join('<span class="gap"></span>');
+    add(`<header class="hd">
+      <h1>${esc(C.name)}</h1>
+      <p class="role">${tx(C.role)}</p>
+      ${where ? `<p class="meta">${where}</p>` : ''}
+      ${contacts ? `<p class="meta">${contacts}</p>` : ''}
+    </header>`);
+
+    const bio = t(C.about && C.about.bio) || [];
+    if (bio.length) {
+      const last = bio.length > 1 ? sentences(bio[bio.length - 1])[0] : '';
+      add(`<h2>${UI.sum}</h2>`, true);
+      add(`<p class="sum">${esc(smart(bio[0]))}${last ? ` ${esc(smart(last))}` : ''}</p>`);
+    }
+
+    const jobs = C.experience || [];
+    if (jobs.length) add(`<h2>${UI.exp}</h2>`, true);
+    jobs.forEach((j, i) => {
+      const bl = t(j.bullets) || [], tools = (j.stack || []).length;
+      add(`<div class="job"><div class="row"><span><span class="t">${tx(j.title)}</span>, <span class="o">${tx(j.org)}</span></span><span class="d">${ym(j.start)} – ${j.end ? ym(j.end) : UI.present}</span></div></div>`, bl.length || tools);
+      // sem viúvas: cabeçalho + 2 primeiros itens juntos; os 2 últimos juntos (e com a linha de ferramentas)
+      bl.forEach((b, k) => add(`<li>${esc(smart(b))}</li>`, (k === 0 && bl.length > 2) || k === bl.length - 2 || (tools && k === bl.length - 1), `j${i}`));
+      if (tools) add(`<p class="tools"><span class="k">${UI.tools}:</span> ${list(j.stack)}</p>`);
+    });
+
+    const prjs = C.projects || [];
+    if (prjs.length) add(`<h2>${UI.prj}</h2>`, true);
+    prjs.forEach(p => {
+      const ms = (p.metrics || []).map(m => `${tx(m.label)}: ${esc(m.value)}${tx(m.unit)}.`).join(' ');
+      add(`<div class="prj">
+        <div class="row"><span><span class="t">${tx(p.title)}</span>, <span class="o">${tx(p.org)}</span><span class="st"> · ${tx(p.status)}</span></span><span class="d">${esc(span(p.year))}</span></div>
+        <p class="sm">${tx(p.summary)}${ms ? ` <span class="m">${ms}</span>` : ''}</p>
+        ${(p.stack || []).length ? `<p class="tools"><span class="k">${UI.stack}:</span> ${list(p.stack)}</p>` : ''}
+      </div>`);
+    });
+
+    const sk = C.skills || [];
+    if (sk.length) add(`<h2>${UI.skills}</h2>`, true);
+    sk.forEach(g => {
+      const items = (g.items || []).map((it, i) => ({ n: tx(it[0]), l: +it[1] || 0, i })).sort((a, b) => b.l - a.l || a.i - b.i);
+      const main = items.filter(x => x.l >= 2).map(x => x.n), fam = items.filter(x => x.l < 2).map(x => x.n);
+      add(`<p class="sk"><span class="g">${tx(g.group)}:</span> ${main.join(', ')}${fam.length ? `${main.length ? '; ' : ''}<span class="fam">${UI.familiar}: ${fam.join(', ')}</span>` : ''}.</p>`);
+    });
+
+    const edu = (C.education || []).concat(C.certifications || []);
+    if (edu.length) add(`<h2>${UI.edu}</h2>`, true);
+    edu.forEach(e => add(`<div class="ed"><div class="row"><span><span class="t">${tx(e.title)}</span>, <span class="sub">${tx(e.org)}</span></span><span class="d">${esc(span(t(e.year)))}</span></div></div>`));
+
+    const acts = (C.activities && C.activities.items) || [];
+    if (acts.length) add(`<h2>${tx(C.activities.title) || UI.act}</h2>`, true);
+    acts.forEach(a => {
+      add(`<div class="ed"><div class="row"><span><span class="t">${tx(a.title)}</span>, <span class="sub">${tx(a.org)}</span></span><span class="d">${esc(span(t(a.year)))}</span></div></div>`);
+    });
+
+    const lg = ds('Languages');
+    if (lg) { add(`<h2>${UI.lang}</h2>`, true); add(`<p class="lg">${tx(lg.v)}</p>`); }
+
+    /* ---------- barra ---------- */
+    const pdf = L.cv && (typeof L.cv === 'object' ? L.cv[lang] : L.cv);
+    const other = pt ? 'en' : 'pt';
+    document.getElementById('bar').innerHTML = `
+      <a href="./?lang=${lang}">← ${UI.back}</a>
+      <span class="bar-r">
+        <span class="lang"><span aria-current="true">${lang.toUpperCase()}</span><span class="sep">·</span><a href="?lang=${other}" hreflang="${other}" lang="${other}">${other.toUpperCase()}</a></span>
+        ${pdf ? `<a class="dl" href="${esc(pdf)}" download><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0-3-3m3 3 3-3M3 13h10"/></svg>${UI.dl}</a>` : ''}
+      </span>`;
+
+    /* ---------- paginação: blocos nas folhas, ajustando o corpo para caber em 2 páginas ---------- */
+    const desk = document.getElementById('desk');
+    const els = B.map(b => { const d = document.createElement('div'); d.innerHTML = b.html.trim(); const e = b.g ? document.createElement('li') : d.firstElementChild; if (b.g) e.innerHTML = d.firstElementChild.innerHTML; return e; });
+    function sheet() {
+      const s = document.createElement('section'); s.className = 'sheet';
+      s.innerHTML = '<div class="pb"></div><div class="pf" aria-hidden="true"></div>';
+      desk.appendChild(s); return s.firstChild;
+    }
+    const over = pb => pb.scrollHeight > pb.clientHeight + 0.5;
+    function put(i, pb) {
+      const b = B[i], e = els[i];
+      if (!b.g) { pb.appendChild(e); return; }
+      let ul = pb.lastElementChild;
+      if (!(ul && ul.tagName === 'UL' && ul.dataset.g === b.g)) { ul = document.createElement('ul'); ul.className = 'b'; ul.dataset.g = b.g; pb.appendChild(ul); }
+      ul.appendChild(e);
+    }
+    function take(i) {
+      const e = els[i], p = e.parentNode;
+      if (p) { p.removeChild(e); if (p.tagName === 'UL' && !p.children.length) p.remove(); }
+    }
+    function paginate() {
+      desk.querySelectorAll('.sheet').forEach(s => s.remove());
+      let pb = sheet();
+      const start = [0];
+      for (let i = 0; i < B.length; i++) {
+        put(i, pb);
+        if (!over(pb) || i === start[start.length - 1]) continue;   // um bloco maior que a folha fica onde está
+        // leva o bloco (e os que pedem para ficar junto dele) para a próxima folha
+        let j = i;
+        while (j > start[start.length - 1] + 1 && B[j - 1].keep && i - j < 5) j--;
+        for (let k = j; k <= i; k++) take(k);
+        pb = sheet(); start.push(j);
+        for (let k = j; k <= i; k++) put(k, pb);
+      }
+      const ss = desk.querySelectorAll('.sheet');
+      ss.forEach((s, i) => { s.querySelector('.pf').textContent = `${C.name} · ${UI.title} · ${UI.page(i + 1, ss.length)}`; s.setAttribute('aria-label', UI.page(i + 1, ss.length)); });
+      return ss.length;
+    }
+    const SIZES = [10.75, 10.5, 10.25, 10.125, 10, 9.875, 9.75, 9.625, 9.5];   // corpo em pt; o maior que couber em 2 folhas
+    let SW = 0;
+    function layout() {
+      const root = document.documentElement;
+      desk.style.setProperty('--z', '1');
+      let n = 0;
+      for (const fs of SIZES) { root.style.setProperty('--fs', `${fs}pt`); n = paginate(); if (n <= 2) break; }
+      root.dataset.pages = n; root.dataset.fs = root.style.getPropertyValue('--fs');
+      SW = desk.querySelector('.sheet').offsetWidth;
+      fit();
+    }
+    // na tela, encolhe a mesa inteira para caber na largura (a impressão ignora o zoom)
+    const fit = () => { if (SW) desk.style.setProperty('--z', String(Math.min(1, (document.documentElement.clientWidth - 24) / SW))); };
+    layout();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+    addEventListener('resize', fit);
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portfólio de Data Scientist & AI Engineer em forma de artigo científico, com o assistente 'pergunte ao meu currículo'",
+  "scripts": {
+    "dev": "node server.js",
+    "dev:mock": "ASK_MOCK=1 node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.0.0"
+  }
+}

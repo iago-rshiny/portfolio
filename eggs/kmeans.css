@@ -1,0 +1,104 @@
+/* eggs/kmeans.css — figura "a stack se agrupa sozinha" (k-means semeado + PCA) */
+.km {
+  /* paleta categórica validada (adjacentes CVD ≥ 8) — a forma do marcador é a codificação secundária */
+  --km-0: var(--cmd); --km-1: var(--jup-out); --km-2: var(--edit); --km-3: #8a5bb8; --km-4: var(--amber); --km-5: #c2577f;
+}
+@media (prefers-color-scheme: dark) {
+  .km { --km-0: #3f86d8; --km-1: #d0612c; --km-2: #239a6c; --km-3: #9483e0; --km-4: #b98a1c; --km-5: #cf5c8a; }
+}
+.km-c0 { --c: var(--km-0); } .km-c1 { --c: var(--km-1); } .km-c2 { --c: var(--km-2); }
+.km-c3 { --c: var(--km-3); } .km-c4 { --c: var(--km-4); } .km-c5 { --c: var(--km-5); }
+
+/* parágrafo de abertura: o que a figura mede */
+.km-lead { margin: 1.6rem 0 0; text-align: justify; -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 6 3 2; }
+.km-lead i { font-style: italic; }
+.km-lead + .fig { margin-top: 1.2rem; }
+@media (max-width: 639px) { .km-lead { text-align: left; -webkit-hyphens: manual; hyphens: manual; } }
+
+/* controles */
+.km-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: .55rem 1rem; margin: 0 0 .8rem; font-size: .86rem; }
+.km-k { display: inline-flex; align-items: center; }
+.km-kl { margin-right: .5rem; color: var(--ink-2); font-size: 1rem; white-space: nowrap; }
+.km-kl i { font-style: italic; }
+.km-kb { position: relative; cursor: pointer; }
+.km-rad { position: absolute; left: 0; top: 0; width: 1px; height: 1px; margin: 0; opacity: 0; }
+.km-kb span {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2.05rem; height: 2.05rem; margin-left: -1px;
+  border: 1px solid var(--cell-line); background: var(--paper); color: var(--ink);
+  font: 500 .9rem/1 var(--mono); font-variant-numeric: tabular-nums; transition: background-color .15s, border-color .15s;
+}
+.km-kb:first-of-type span { margin-left: 0; border-radius: 4px 0 0 4px; }
+.km-kb:last-of-type span { border-radius: 0 4px 4px 0; }
+.km-kb:hover span { border-color: var(--ink-3); z-index: 1; }
+.km-rad:checked + span { background: var(--ink); border-color: var(--ink); color: var(--paper); z-index: 2; }
+.km-rad:focus-visible + span { outline: 2px solid var(--focus); outline-offset: 2px; z-index: 3; }
+.km-run {
+  display: inline-flex; align-items: center; gap: .45rem; min-height: 2.05rem; padding: 0 .85rem;
+  border: 1px solid var(--ink); border-radius: 4px; background: var(--ink); color: var(--paper); cursor: pointer;
+  font: 600 .82rem/1 var(--mono); letter-spacing: .02em; transition: background-color .15s, color .15s;
+}
+.km-run svg { width: .62rem; height: .62rem; fill: currentColor; }
+.km-run:hover, .km-run.is-on { background: var(--paper); color: var(--ink); }
+.km-stat { flex: 1 1 15rem; min-width: 0; margin-left: auto; text-align: right; font: .78rem/1.4 var(--mono); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.km-stat span { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.km-stat span:first-child { color: var(--ink); }
+.km-nw { white-space: nowrap; }
+
+/* gráfico principal */
+.km-plot { position: relative; }
+.km-svg { display: block; max-width: 100%; overflow: visible; -webkit-tap-highlight-color: transparent; }
+.km svg text { font-family: var(--serif); font-optical-sizing: auto; font-variant-numeric: lining-nums tabular-nums; fill: var(--ink-2); }
+.km svg .km-at { fill: var(--ink); }
+.km-sp { fill: none; stroke: var(--ink); stroke-width: 1; shape-rendering: crispEdges; }
+.km-zero { fill: none; stroke: var(--hair); stroke-width: 1; shape-rendering: crispEdges; }
+.km-spk path { fill: none; stroke: var(--c); stroke-width: .9; stroke-opacity: .42; }
+.km-pt { outline: none; }
+.km-sh { fill: var(--c); stroke: var(--paper); stroke-width: 1.5; }
+.km-sh.km-cn { fill: var(--paper); stroke: var(--ink-3); stroke-width: 1.2; }
+.km-hl { fill: none; stroke: var(--focus); stroke-width: 2; pointer-events: none; }
+.km-cx-h { fill: none; stroke: var(--paper); stroke-width: 5.5; stroke-linecap: round; }
+.km-cx { fill: none; stroke: var(--ink); stroke-width: 2.1; stroke-linecap: round; }
+.km-lab text { fill: var(--ink); font-style: italic; paint-order: stroke; stroke: var(--paper); stroke-width: 4px; stroke-linejoin: round; }
+.km-lab path { fill: var(--c); stroke: var(--paper); stroke-width: 1; }
+
+/* dica */
+.km-tip {
+  position: absolute; z-index: 4; left: 0; top: 0; width: max-content; max-width: min(21rem, 100%);
+  padding: .45rem .65rem .5rem; background: var(--paper); border: 1px solid var(--ink); border-radius: 3px;
+  box-shadow: 0 6px 18px -8px rgba(0, 0, 0, .3); font-size: .84rem; line-height: 1.42; pointer-events: none;
+}
+.km-src { display: block; font: 600 .74rem/1.35 var(--mono); letter-spacing: .02em; color: var(--ink); }
+.km-src span { font-weight: 400; color: var(--ink-3); }
+.km-tc { display: flex; align-items: center; gap: .3rem; margin: .12rem 0 .28rem; font-size: .78rem; font-style: italic; color: var(--ink-2); }
+.km-tc .km-nx { font-style: normal; color: var(--ink-3); }
+.km-tx { display: block; color: var(--ink); }
+.km-tx i { font-style: italic; }
+.km-meta { display: block; margin-top: .2rem; font: .72rem/1.35 var(--mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.km-gl { flex: none; display: inline-block; vertical-align: -.12em; overflow: visible; }
+.km-gl path { fill: var(--c); }
+
+/* legenda e painéis (b), (c) */
+.km-leg { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13.5rem), 1fr)); gap: .55rem 1.4rem; margin: .7rem 0 0; padding: 0; list-style: none; font-size: .82rem; line-height: 1.35; color: var(--ink-2); }
+.km-leg li { min-width: 0; }
+.km-lh { display: flex; align-items: center; gap: .35rem; color: var(--ink); }
+.km-lh b { font-weight: 600; font-style: italic; }
+.km-lm { display: block; padding-left: calc(14px + .35rem); font-size: .94em; }
+.km-n { font-family: var(--mono); font-size: .9em; color: var(--ink-3); }
+.km-sub { display: flex; justify-content: space-between; gap: 18px; margin-top: 1rem; }
+.km-pan svg { display: block; overflow: visible; }
+.km-ptl { margin: .2rem 0 0 !important; font-size: .8rem; line-height: 1.3; text-align: center; color: var(--ink-2); }
+.km-ln { fill: none; stroke: var(--ink-2); stroke-width: 1.5; stroke-linejoin: round; }
+.km-mk { fill: var(--paper); stroke: var(--ink); stroke-width: 1.2; }
+.km-mk.is-on { fill: var(--ink); }
+.km-rg { fill: none; stroke: var(--ink); stroke-width: 1.3; stroke-dasharray: 2 1.6; }
+.km-rg.is-on { fill: var(--ink); stroke-dasharray: none; }
+.km-cur { fill: none; stroke: color-mix(in srgb, var(--hl) 55%, transparent); stroke-width: 14; }
+.km svg .km-max { fill: var(--ink-2); font-style: italic; paint-order: stroke; stroke: var(--paper); stroke-width: 3px; stroke-linejoin: round; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .km-sh { transition: fill .35s ease, stroke .35s ease; }
+  .km-lab { animation: km-in .45s ease both; }
+}
+@keyframes km-in { from { opacity: 0; } }
+@media print { .km-ctl, .km-tip { display: none !important; } }

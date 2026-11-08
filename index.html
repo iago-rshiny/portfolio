@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Iago Vale — Data Scientist &amp; AI Engineer</title>
+  <meta name="description" content="Iago Vale, Data Scientist &amp; AI Engineer: AI agents that automate real business operations, presented as a research paper.">
+  <meta name="author" content="Iago Vale">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#e6e4df" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121211" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Preview ao compartilhar no LinkedIn: troque SEU-DOMINIO pela URL final do site -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Iago Vale — Data Scientist &amp; AI Engineer">
+  <meta property="og:description" content="AI agents that automate real business operations, presented as a research paper.">
+  <meta property="og:image" content="https://SEU-DOMINIO/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://SEU-DOMINIO/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400..700&family=Newsreader:ital,opsz,wght@0,6..72,300..800;1,6..72,300..800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="eggs/eggs.css">
+
+  <script>
+    // Idioma antes do primeiro paint: ?lang=en|pt > escolha salva > en (padrão).
+    (function () {
+      var l = new URLSearchParams(location.search).get('lang');
+      if (l !== 'pt' && l !== 'en') { try { l = localStorage.getItem('artigo:lang'); } catch (e) { l = null; } }
+      if (l !== 'pt') l = 'en';
+      document.documentElement.lang = l === 'en' ? 'en' : 'pt-BR';
+      document.documentElement.setAttribute('data-lang', l);
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#paper" data-ui="skip">Skip to content</a>
+
+  <header class="bar">
+    <div class="bar-in">
+      <a class="bar-id" href="#topo">
+        <span class="bar-name" data-fill="name"></span>
+        <span class="bar-role" data-fill="role"></span>
+      </a>
+      <nav class="bar-nav" aria-label="Paper sections" data-ui-label="navLabel">
+        <ol id="nav-list"></ol>
+      </nav>
+      <div class="bar-tools">
+        <div class="lang" role="group" aria-label="Language" data-ui-label="langGroup">
+          <button type="button" data-lang="en" lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="pt" lang="pt-BR" aria-pressed="false">PT</button>
+        </div>
+        <button type="button" class="bar-tex" id="bar-tex"><span class="tex-logo" aria-hidden="true">T<span>e</span>X</span></button>
+        <a class="bar-pdf" id="bar-pdf" hidden>
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v8m0 0-3-3m3 3 3-3M3 13h10"/></svg>
+          <span>PDF</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main id="paper" tabindex="-1">
+    <noscript><p class="noscript">This paper is typeset with JavaScript. Please enable it. · Este artigo é montado com JavaScript. Ative-o para ler.</p></noscript>
+  </main>
+
+  <script src="content.js"></script>
+  <!-- Easter eggs: cada módulo se registra em window.ArtigoEggs e o app.js chama na renderização -->
+  <script src="eggs/kmeans.js"></script>
+  <script src="eggs/evallab.js"></script>
+  <script src="eggs/confusion.js"></script>
+  <script src="eggs/ontology.js"></script>
+  <script src="eggs/langgraph.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

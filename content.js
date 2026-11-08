@@ -36,7 +36,7 @@ var PORTFOLIO = {
     email: "imaurevale@gmail.com",
     linkedin: "https://www.linkedin.com/in/iago-vale-53299a190/",
     github: "",  // deixe vazio para esconder o botão
-    site: "",    // URL pública do site (preenchida depois do deploy; aparece no CV)
+    site: "https://iago-rshiny.github.io/portfolio/",    // URL pública do site (preenchida depois do deploy; aparece no CV)
     // PDFs gerados do cv.html com tools/cv-pdf.sh (veja "CV em PDF" no README); vazio esconde o botão
     cv: { pt: "cv-iago-vale-pt.pdf", en: "cv-iago-vale-en.pdf" }
   },

@@ -51,6 +51,17 @@
     }
   };
 
+  const NOASK = {
+    en: {
+      head: (n, m, k) => ['Figure A.1 · the ontology behind this paper', `generated from content.js: ${n} entities, ${m} relations, ${k} triples`],
+      cap: (n, m, f) => `The ontology behind this paper: ${n} entities and ${m} relations generated from ${f}, the same data every section is built from.`
+    },
+    pt: {
+      head: (n, m, k) => ['Figura A.1 · a ontologia por trás deste artigo', `gerada do content.js: ${n} entidades, ${m} relações, ${k} triplas`],
+      cap: (n, m, f) => `A ontologia por trás deste artigo: ${n} entidades e ${m} relações geradas do ${f}, os mesmos dados de que cada seção é feita.`
+    }
+  };
+
   /* ---------- content.js → entidades e relações ---------- */
   const enOf = v => (v == null ? '' : typeof v === 'object' ? String(v.en ?? v.pt ?? '') : String(v));
   const slug = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\./g, '')
@@ -554,7 +565,8 @@
   /* ---------- módulo ---------- */
   (window.ArtigoEggs = window.ArtigoEggs || {}).ontology = function (el, ctx) {
     const { lang, C, t, esc } = ctx;
-    const L = S[lang] || S.en;
+    // Sem o assistente (hospedagem só estática), a figura vira "a ontologia por trás do artigo".
+    const L = ctx.ask === false ? Object.assign({}, S[lang] || S.en, NOASK[lang] || NOASK.en) : (S[lang] || S.en);
     const G = build(C, t, lang);
     if (G.N.length < 2) { el.remove(); return; }
     const uid = `on-${++seq}`, ttl = turtle(G, L, lang), counts = {};

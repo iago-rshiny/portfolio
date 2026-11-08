@@ -50,8 +50,8 @@
       ctaPdf: 'Currículo', ctaPdfSub: 'PDF', ctaLinkedin: 'LinkedIn', ctaEmail: 'E-mail', ctaGithub: 'GitHub', ctaProjects: 'Projetos',
       ctaLabel: 'Links principais',
       abstract: 'Resumo', keywords: 'Palavras-chave', metadata: 'Metadados',
-      sec: { intro: 'Introdução', systems: 'Sistemas', methods: 'Métodos e ferramentas', exp: 'Experiência profissional', edu: 'Formação e atividades', refs: 'Referências', appendix: 'Apêndice', ask: 'Pergunte ao meu currículo', supp: 'Suplemento estatístico', graph: 'Um agente revisor em LangGraph' },
-      nav: { intro: 'Introdução', systems: 'Sistemas', methods: 'Métodos', exp: 'Experiência', edu: 'Formação', refs: 'Referências', ask: 'Apêndice', supp: 'Estatística', graph: 'Grafo', apps: 'Apêndices' },
+      sec: { intro: 'Introdução', systems: 'Sistemas', methods: 'Métodos e ferramentas', exp: 'Experiência profissional', edu: 'Formação e atividades', refs: 'Referências', appendix: 'Apêndice', ask: 'Pergunte ao meu currículo', ont: 'A ontologia do artigo', supp: 'Suplemento estatístico', graph: 'Um agente revisor em LangGraph' },
+      nav: { intro: 'Introdução', systems: 'Sistemas', methods: 'Métodos', exp: 'Experiência', edu: 'Formação', refs: 'Referências', ask: 'Apêndice', ont: 'Ontologia', supp: 'Estatística', graph: 'Grafo', apps: 'Apêndices' },
       table: 'Tabela', figure: 'Figura', section: 'Seção', appendixRef: 'Apêndice',
       introLead: parts => `Este documento apresenta meu trabalho no formato de um artigo: ${parts}.`,
       introAsk: ref => ` O ${ref} é executável: um assistente responde perguntas sobre o conteúdo e cita as fontes.`,
@@ -78,6 +78,7 @@
       education: 'Formação acadêmica', certifications: 'Certificações',
       refsLead: 'Correspondência',
       ref: { linkedin: 'Perfil profissional no LinkedIn', cvPt: 'Currículo (PDF, português)', cvEn: 'Currículo (PDF, inglês)', email: 'Endereço para correspondência', github: 'Repositórios de código no GitHub' },
+      ontLead: 'Todas as seções deste artigo são geradas de um único arquivo de dados. A figura abaixo mostra esse arquivo como um grafo de conhecimento: os cargos e as empresas, os sistemas construídos, os agentes que eles implantam, as bases de conhecimento que esses agentes consultam e as ferramentas usadas em cada emprego.',
       askLead: 'Este apêndice é executável. Um assistente de IA responde perguntas sobre minha experiência usando apenas o conteúdo desta página, e cita a fonte de cada afirmação: clique numa citação para ir até ela.',
       askNote: 'Respostas geradas por IA podem conter erros. Na dúvida, fale comigo.',
       nbFile: 'curriculo.ipynb', nbKernel: 'Kernel: currículo', nbIdle: 'ocioso', nbBusy: 'ocupado',
@@ -118,8 +119,8 @@
       ctaPdf: 'Résumé', ctaPdfSub: 'PDF', ctaLinkedin: 'LinkedIn', ctaEmail: 'Email', ctaGithub: 'GitHub', ctaProjects: 'Projects',
       ctaLabel: 'Main links',
       abstract: 'Abstract', keywords: 'Keywords', metadata: 'Metadata',
-      sec: { intro: 'Introduction', systems: 'Systems', methods: 'Methods and tools', exp: 'Professional experience', edu: 'Education and activities', refs: 'References', appendix: 'Appendix', ask: 'Ask my résumé', supp: 'Statistical supplement', graph: 'A reviewer agent in LangGraph' },
-      nav: { intro: 'Introduction', systems: 'Systems', methods: 'Methods', exp: 'Experience', edu: 'Education', refs: 'References', ask: 'Appendix', supp: 'Statistics', graph: 'Graph', apps: 'Appendices' },
+      sec: { intro: 'Introduction', systems: 'Systems', methods: 'Methods and tools', exp: 'Professional experience', edu: 'Education and activities', refs: 'References', appendix: 'Appendix', ask: 'Ask my résumé', ont: 'The ontology of this paper', supp: 'Statistical supplement', graph: 'A reviewer agent in LangGraph' },
+      nav: { intro: 'Introduction', systems: 'Systems', methods: 'Methods', exp: 'Experience', edu: 'Education', refs: 'References', ask: 'Appendix', ont: 'Ontology', supp: 'Statistics', graph: 'Graph', apps: 'Appendices' },
       table: 'Table', figure: 'Figure', section: 'Section', appendixRef: 'Appendix',
       introLead: parts => `This document presents my work in the format of a paper: ${parts}.`,
       introAsk: ref => ` ${ref} is executable: an assistant answers questions about the content and cites its sources.`,
@@ -146,6 +147,7 @@
       education: 'Education', certifications: 'Certifications',
       refsLead: 'Correspondence',
       ref: { linkedin: 'Professional profile on LinkedIn', cvPt: 'Résumé (PDF, Portuguese)', cvEn: 'Résumé (PDF, English)', email: 'Correspondence address', github: 'Code repositories on GitHub' },
+      ontLead: 'Every section of this paper is generated from a single data file. The figure below shows that file as a knowledge graph: the positions and organizations, the systems built, the agents they deploy, the knowledge bases those agents query and the tools each job used.',
       askLead: 'This appendix is executable. An AI assistant answers questions about my experience using only the content of this page, and cites the source of every claim: click a citation to jump to it.',
       askNote: 'AI-generated answers can contain mistakes. When in doubt, talk to me.',
       nbFile: 'resume.ipynb', nbKernel: 'Kernel: résumé', nbIdle: 'idle', nbBusy: 'busy',
@@ -253,8 +255,15 @@
      ======================================================================= */
   let counters, secNo, navItems;
 
+  // Hospedagem só estática (GitHub Pages, arquivo aberto direto) não tem o /api/ask: o assistente
+  // some sozinho e a ontologia ganha um apêndice próprio. Na Vercel ele volta sem mudar nada.
+  // ?static=1 simula isso localmente.
+  const staticHost = location.protocol === 'file:' || /\.github\.io$/i.test(location.hostname)
+    || new URLSearchParams(location.search).has('static');
+
   function sectionsPlan() {
-    const askOn = !C.assistant || C.assistant.enabled !== false;
+    const askOn = (!C.assistant || C.assistant.enabled !== false) && !staticHost;
+    const ontOn = !askOn && eggOn('ontology');
     const eduOn = (C.education || []).length || (C.certifications || []).length || (C.activities && (C.activities.items || []).length);
     const refsOn = L.email || L.linkedin || L.github || cvHref('pt') || cvHref('en');
     const plan = [
@@ -270,9 +279,9 @@
     if (refsOn) navItems.push({ id: 'contato', n: '', label: u('nav').refs });
     // Apêndices: as letras seguem a ordem dos que estiverem ligados (A, B, C...).
     const suppOn = eggOn('evallab'), graphOn = eggOn('langgraph');
-    [askOn && ['apendice-a', 'ask'], suppOn && ['apendice-b', 'supp'], graphOn && ['apendice-c', 'graph']]
+    [askOn && ['apendice-a', 'ask'], ontOn && ['apendice-ont', 'ont'], suppOn && ['apendice-b', 'supp'], graphOn && ['apendice-c', 'graph']]
       .filter(Boolean).forEach(([id, key], i) => navItems.push({ id, n: 'ABCDE'[i], label: u('nav')[key] }));
-    return { askOn, refsOn, suppOn, graphOn };
+    return { askOn, ontOn, refsOn, suppOn, graphOn };
   }
 
   // Easter eggs em módulos separados (eggs/*.js): cada um se registra em window.ArtigoEggs[nome]
@@ -614,12 +623,13 @@
   }
 
   /* ---------- Apêndices B e C: módulos eggs/evallab.js e eggs/langgraph.js ---------- */
-  function eggAppendixHTML(id, key, egg) {
+  function eggAppendixHTML(id, key, egg, num) {
     const item = navItems.find(i => i.id === id);
     return `
       <section class="sec appendix" id="${id}" aria-labelledby="${id}-h">
         <h2 class="sec-h" id="${id}-h"><span class="sec-n">${esc(item.n)}</span> <span class="sec-t">${esc(u('sec')[key])}</span></h2>
-        ${eggSlot(egg, item.n)}
+        ${num ? `<p>${esc(u('ontLead'))}</p>` : ''}
+        ${eggSlot(egg, num ? `${item.n}.1` : item.n)}
       </section>`;
   }
 
@@ -637,14 +647,14 @@
     if (md && has(C.tagline)) md.setAttribute('content', `${C.name}, ${t(C.role)}. ${t(C.tagline)}`);
 
     counters = { tab: 0, fig: 0 };
-    const { askOn, refsOn, suppOn, graphOn } = sectionsPlan();
+    const { askOn, ontOn, refsOn, suppOn, graphOn } = sectionsPlan();
     const sec = u('sec');
     const head = k => `${secNo[k]} ${sec[k]}`;
 
     const p1 = frontHTML() + introHTML();
     const p2 = secNo.systems ? systemsHTML() : '';
     const p3 = (secNo.methods ? methodsHTML() : '') + (secNo.exp ? expHTML() : '');
-    const p4 = (secNo.edu ? eduHTML() : '') + (refsOn ? refsHTML() : '') + (askOn ? askHTML() : '') + (suppOn ? eggAppendixHTML('apendice-b', 'supp', 'evallab') : '')
+    const p4 = (secNo.edu ? eduHTML() : '') + (refsOn ? refsHTML() : '') + (askOn ? askHTML() : '') + (ontOn ? eggAppendixHTML('apendice-ont', 'ont', 'ontology', true) : '') + (suppOn ? eggAppendixHTML('apendice-b', 'supp', 'evallab') : '')
       + (graphOn ? eggAppendixHTML('apendice-c', 'graph', 'langgraph') : '');
     const notes1 = `<div class="fn-area"><p id="fn-1"><sup>*</sup> ${esc(u('titleNote'))} <a href="#fnref-1" class="fn-back" aria-label="${esc(u('back'))}">↩</a></p></div>`;
     const notes4 = askOn ? `<div class="fn-area"><p id="fn-2"><sup>†</sup> ${esc(u('askNote'))} <a href="#fnref-2" class="fn-back" aria-label="${esc(u('back'))}">↩</a></p></div>` : '';
@@ -676,7 +686,7 @@
 
   function runEggs() {
     const E = window.ArtigoEggs || {};
-    const ctx = { lang, C, t, esc, smart, reduced: reducedMQ.matches, figure: u('figure'), table: u('table') };
+    const ctx = { lang, C, t, esc, smart, reduced: reducedMQ.matches, figure: u('figure'), table: u('table'), ask: !staticHost && (!C.assistant || C.assistant.enabled !== false) };
     $$('[data-egg]').forEach(el => {
       const fn = E[el.dataset.egg];
       if (typeof fn !== 'function') return;
@@ -1314,8 +1324,9 @@
       o.push('\\appendix', `\\section{${tex(sec.ask)}}\\label{apendice-a}`, `% ${u('texAskNote')}`,
         `${tex(u('askLead'))}\\footnote{${tex(u('askNote'))}}`, '');
     }
-    const { suppOn, graphOn } = sectionsPlan();
-    if (!askOn && (suppOn || graphOn)) o.push('\\appendix');
+    const { ontOn, suppOn, graphOn } = sectionsPlan();
+    if (!askOn && (ontOn || suppOn || graphOn)) o.push('\\appendix');
+    if (ontOn) o.push(`\\section{${tex(sec.ont)}}\\label{apendice-ont}`, tex(u('ontLead')), `% ${u('texEggNote')}`, '');
     if (suppOn) o.push(`\\section{${tex(sec.supp)}}\\label{apendice-b}`, `% ${u('texEggNote')}`, '');
     if (graphOn) o.push(`\\section{${tex(sec.graph)}}\\label{apendice-c}`, `% ${u('texEggNote')}`, '');
     o.push('\\end{document}', '');

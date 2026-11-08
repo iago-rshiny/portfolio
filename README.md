@@ -24,7 +24,7 @@ Inglês é o idioma padrão; português fica no botão PT.
 
 ## Antes de publicar
 
-1. Em `index.html`, troque `SEU-DOMINIO` nas tags `og:image` e `og:url` pela URL final.
+1. Mudou o endereço do site? Troque a URL em `og:image` e `og:url` (`index.html`) e em `links.site` (`content.js`).
 2. Mudou algo em `content.js`? Os PDFs do CV **não** se atualizam sozinhos (veja "CV em PDF" abaixo).
 3. Mudou nome, cargo ou título (`title` no `content.js`)? Gere de novo o `og-image.png` (abaixo).
 
@@ -36,28 +36,34 @@ npm run dev:mock   # assistente com resposta simulada, sem gastar tokens
 npm run dev        # assistente de verdade (precisa do .env com ANTHROPIC_API_KEY)
 ```
 
-Abra http://localhost:3000 (porta ocupada? `PORT=4321 npm run dev:mock`). Abrir o `index.html` direto também funciona, mas aí o notebook do
-Apêndice A mostra "offline", porque não tem servidor para responder.
+Abra http://localhost:3000 (porta ocupada? `PORT=4321 npm run dev:mock`). Abrir o `index.html` direto também funciona,
+no modo estático (sem o assistente; veja "Publicação").
 
 Parâmetros úteis na URL:
 
 - `?lang=pt` / `?lang=en` — força o idioma (bom para mandar a versão em português a recrutadores daqui)
 - `#apendice-a`, `#sistemas`... — abre direto numa seção (e pula a "compilação" de abertura)
+- `?static=1` — simula a hospedagem só estática (como no GitHub Pages)
 
 Sem parâmetro, o site abre em inglês (ou no último idioma escolhido pelo visitante) e segue o modo
 claro/escuro do sistema.
 
-## Publicar na Vercel (grátis)
+## Publicação
 
-O assistente precisa de uma função de servidor, então use a **Vercel** (detecta a pasta `api/` sozinha):
+**Hoje:** GitHub Pages, grátis, em https://iago-rshiny.github.io/portfolio/. Cada `git push` na `main`
+publica sozinho em cerca de 1 minuto.
 
-1. `npx vercel` na pasta do projeto (ou importe o repositório em vercel.com/new).
-2. Em **Settings → Environment Variables**, cadastre `ANTHROPIC_API_KEY`
-   (crie a chave no Console da Anthropic, em platform.claude.com).
-3. Faça o deploy de novo para a variável valer: `npx vercel --prod`.
+O Pages só serve arquivos estáticos, sem a função `api/ask.js`. Por isso, em `*.github.io` (e ao abrir o
+`index.html` direto), o site entra no **modo estático**: o assistente some e a ontologia vira um
+apêndice próprio. Não precisa mudar nada no código para isso.
 
-Em hosts só estáticos (GitHub Pages, Netlify Drop), o site funciona, mas o assistente fica offline.
-Nesse caso, desligue o assistente com `assistant.enabled: false` em `content.js`.
+**Para ligar o assistente:** publique na **Vercel**, que detecta a pasta `api/` sozinha. Lá o
+assistente volta automaticamente.
+
+1. Em vercel.com, entre com o GitHub e importe o repositório (Framework Preset: "Other").
+2. Em **Environment Variables**, cadastre `ANTHROPIC_API_KEY` (crie a chave em platform.claude.com e
+   defina um teto de gasto em Limits) e `ASK_MODEL=claude-haiku-5-5`.
+3. Faça o deploy e troque as URLs (veja "Antes de publicar").
 
 ## Assistente "Pergunte ao meu currículo"
 

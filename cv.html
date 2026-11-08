@@ -183,6 +183,7 @@
     const contacts = [
       L.email ? `<a class="u" href="mailto:${esc(L.email)}">${esc(L.email)}</a>` : '',
       L.linkedin ? `<a class="u" href="${esc(L.linkedin)}">${esc(pretty(L.linkedin))}</a>` : '',
+      L.github ? `<a class="u" href="${esc(L.github)}">${esc(pretty(L.github))}</a>` : '',
       L.site ? `<a class="u" href="${esc(L.site)}">${esc(pretty(L.site))}</a>` : ''
     ].filter(Boolean).join('<span class="dot" aria-hidden="true">·</span>');
     const where = [kv(ds('Based in')), kv(ds('Citizenship'))].filter(Boolean).join('<span class="gap"></span>');
